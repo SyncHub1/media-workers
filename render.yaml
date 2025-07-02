@@ -1,0 +1,50 @@
+services:
+  - type: worker
+    name: image-processor
+    env: node
+    buildCommand: npm install
+    startCommand: npm run start:image
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: media-redis
+          property: connectionString
+      - key: MONGODB_URI
+        fromService:
+          type: pserv
+          name: media-mongodb
+          property: connectionString
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+  - type: worker
+    name: media-processor
+    env: node
+    buildCommand: npm install
+    startCommand: npm run start:media
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: media-redis
+          property: connectionString
+      - key: MONGODB_URI
+        fromService:
+          type: pserv
+          name: media-mongodb
+          property: connectionString
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false 
